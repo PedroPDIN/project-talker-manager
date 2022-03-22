@@ -26,6 +26,22 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  const dataTalker = await fileJson();
+  const valueQuery = q.toLowerCase();
+  
+  const filterData = dataTalker.filter((v) => v.name.toLowerCase().includes(valueQuery));
+
+  if (!valueQuery) return res.status(200).json(dataTalker);
+
+  try {
+    res.status(200).json(filterData);
+  } catch (error) {
+    res.status(200).json([]);
+  }
+});
+
 app.get('/talker', async (req, res) => {
   const dataTalker = await fileJson();
 
