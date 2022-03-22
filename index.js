@@ -3,6 +3,14 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 const { isValidEmail, isValidPassword } = require('./middlewares/validation');
+const { 
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  isValidTalkWatchedAt,
+  isValidTalkRate,
+} = require('./middlewares/validationTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -42,6 +50,24 @@ app.post('/login', isValidEmail, isValidPassword, (req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
 
   res.status(200).json({ token });
+});
+
+app.post('/talker', 
+isValidToken,
+isValidName,
+isValidAge,
+isValidTalk,
+isValidTalkWatchedAt,
+isValidTalkRate,
+async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  const dataTalker = await fileJson();
+  const newData = { name, age, talk: { watchedAt, rate } };
+
+  dataTalker.push(newData);
+  // await fs.writeFile('./talker.json', JSON.stringify(dataTalker));
+  res.status(201).json({ message: 'test' });
 });
 
 app.listen(PORT, () => {
