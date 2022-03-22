@@ -61,21 +61,37 @@ isValidTalkWatchedAt,
 isValidTalkRate,
 async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
-
   const dataTalker = await fileJson();
-  // console.log(dataTalker);
   const newId = dataTalker.length + 1;
   const newData = { name, age, id: newId, talk: { watchedAt, rate } };
 
   dataTalker.push(newData);
-
   const newDataTalker = JSON.stringify(dataTalker, null, 2);
 
   await fs.writeFile('./talker.json', newDataTalker);
-
-  console.log(dataTalker);
-
   res.status(201).json(newData);
+});
+
+app.put('/talker/:id', 
+isValidToken,
+isValidName,
+isValidAge,
+isValidTalk,
+isValidTalkWatchedAt,
+isValidTalkRate,
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const dataTalker = await fileJson();
+  const filterIndex = dataTalker.findIndex((v) => v.id === Number(id));
+
+  dataTalker[filterIndex] = {
+    ...dataTalker[filterIndex], name, age, talk: { watchedAt, rate },
+  };
+
+  await fs.writeFile('./talker.json', JSON.stringify(dataTalker));
+
+  res.status(200).json(dataTalker[filterIndex]);
 });
 
 app.listen(PORT, () => {
