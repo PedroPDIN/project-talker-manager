@@ -13,7 +13,7 @@ const isValidToken = (req, res, next) => {
 const isValidName = (req, res, next) => {
   const { name } = req.body;
   const nameLength = name && name.length;
-
+  
   if (!name) { return res.status(400).json({ message: 'O campo "name" é obrigatório' }); }
   if (nameLength < 3) {
     return res.status(400).json({
@@ -48,7 +48,9 @@ const isValidTalk = (req, res, next) => {
 }; 
 
 const isValidTalkWatchedAt = (req, res, next) => {
-   // https://pt.stackoverflow.com/questions/371316/valida%C3%A7%C3%A3o-regex-de-data-com-2-2-4-caracteres
+// linha 55: regex inspirado no link abaixo.
+// https://pt.stackoverflow.com/questions/371316/valida%C3%A7%C3%A3o-regex-de-data-com-2-2-4-caracteres
+// link recebido por Emerson turma 16 For(ever)
   const { talk } = req.body;
   const test = /^(\d{2})\/(\d{2})\/(\d{4})$/;
   const bool = test.test(talk.watchedAt);

@@ -63,11 +63,19 @@ async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
 
   const dataTalker = await fileJson();
-  const newData = { name, age, talk: { watchedAt, rate } };
+  // console.log(dataTalker);
+  const newId = dataTalker.length + 1;
+  const newData = { name, age, id: newId, talk: { watchedAt, rate } };
 
   dataTalker.push(newData);
-  // await fs.writeFile('./talker.json', JSON.stringify(dataTalker));
-  res.status(201).json({ message: 'test' });
+
+  const newDataTalker = JSON.stringify(dataTalker, null, 2);
+
+  await fs.writeFile('./talker.json', newDataTalker);
+
+  console.log(dataTalker);
+
+  res.status(201).json(newData);
 });
 
 app.listen(PORT, () => {

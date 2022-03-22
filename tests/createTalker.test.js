@@ -2,6 +2,8 @@ const frisby = require('frisby');
 const fs = require('fs');
 const path = require('path');
 
+jest.setTimeout(50000);
+
 const postTalkerMock = {
   name: 'Zendaya Maree',
   age: 24,
