@@ -94,6 +94,20 @@ async (req, res) => {
   res.status(200).json(dataTalker[filterIndex]);
 });
 
+app.delete('/talker/:id',
+isValidToken,
+async (req, res) => {
+  const { id } = req.params;
+  const dataTalker = await fileJson();
+  const filterIndex = dataTalker.findIndex((v) => v.id === Number(id));
+
+  dataTalker.splice(filterIndex, 1);
+
+  await fs.writeFile('./talker.json', JSON.stringify(dataTalker));
+
+  res.status(204).json(dataTalker[filterIndex]);
+  });
+
 app.listen(PORT, () => {
   console.log('Online');
 });
